@@ -1,0 +1,82 @@
+.navigation {
+  display: flex;
+  height: 50px;
+  background-color: var(--color-primary);
+}
+
+.chatAppIcon {
+  border-radius: 50%;
+  margin: 10px;
+}
+
+.chatAppName {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--font-color-primary);
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.appSectionRoot {
+  width: 80%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  position: relative;
+  top: 35%;
+}
+
+.appSection {
+  width: 100%;
+}
+
+.leftSection {
+  width: 25%;
+  background-color: var(--color-primary);
+}
+
+.profileHeader {
+  display: flex;
+  justify-content: end;
+}
+
+.settingsWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profileImage {
+  border-radius: 50%;
+  margin: 10px;
+}
+
+.displayName {
+  color: var(--font-color-primary);
+  margin-left: 2px;
+}
+
+.logoutImage {
+  cursor: pointer;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.searchBar {
+    width: -webkit-fill-available;
+    border: 1px solid grey;
+    border-radius: 5px;
+    height: 20px;
+    outline: 0;
+    background-color: var(--color-ternary);
+}
+
+.friendsList {
+}
+
+.rightSection {
+  width: 75%;
+}

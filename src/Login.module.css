@@ -1,0 +1,72 @@
+.formRoot {
+  margin: 0 auto;
+  width: 50%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.formWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-primary);
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px 8px var(--color-ternary);
+}
+
+.form {
+  margin: 20px;
+  font-weight: 600;
+  font-style: normal;
+  color: var(--font-color-primary);
+}
+
+.formContents {
+  display: flex;
+  flex-direction: column;
+}
+
+.formContents p {
+  min-width: 100%;
+  width: 0;
+}
+
+.imageInputWrapper {
+  text-align: center;
+  border: 3px dashed rgb(210, 227, 244);
+  padding: 1.5rem;
+  position: relative;
+  cursor: pointer;
+}
+
+.imageInput {
+  display: block;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.imageIcon {
+  width: fit-content;
+  align-self: center;
+}
+
+.formContentsInputWrapper {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.formContentsInput {
+  width: 300px;
+  height: 30px;
+  background-color: var(--color-ternary);
+}
