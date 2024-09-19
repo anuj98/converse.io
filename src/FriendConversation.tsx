@@ -28,7 +28,7 @@ export default function FriendConversation() {
         <div key={friend.id} className={styles.friendConvoPreviewWrapper}>
           <img
             src={friend.profileImage}
-            alt={`${friend.displayName} profile image`}
+            alt={`${friend.displayName} profile`}
             className={styles.profileImage}
           />
           <div>

@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "./Home.module.css";
 import FriendConversation from "./FriendConversation";
+import ChatSection from "./ChatSection";
 
 // Navigation with app name and logo
 // Root wrapper this should be like the center aligned
@@ -37,7 +38,7 @@ export const Home = () => {
               <div className={styles.settingsWrapper}>
                 <img
                   src="favicon-32x32.png"
-                  alt="Profile Image"
+                  alt="Profile"
                   className={styles.profileImage}
                 />
                 <span className={styles.displayName}>Anuj Upadhyaya</span>
@@ -55,7 +56,9 @@ export const Home = () => {
                 <FriendConversation />
             </div>
           </div>
-          <div className={styles.rightSection}></div>
+          <div className={styles.rightSection}>
+            <ChatSection />
+          </div>
         </div>
       </div>
     </>

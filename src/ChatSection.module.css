@@ -1,0 +1,48 @@
+.navigation {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    background-color: var(--color-primary);
+    color: var(--font-color-primary);
+}
+
+.profileImage {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.chatSection {
+    flex-direction: column;
+    height: 100%;
+    padding: 10px;
+}
+
+.chatBubble {
+    margin-top: 10px;
+}
+
+.chatBubbleRight {
+    background-color: #DCF8C6;
+    border-radius: 10px;
+    padding: 10px;
+    margin-left: auto;
+    max-width: 50%;
+}
+
+.chatBubbleLeft {
+    background-color: #FFFFFF;
+    border-radius: 10px;
+    padding: 10px;
+    max-width: 50%;
+}
+
+.sentTime {
+    font-size: 10px;
+    color: #888;
+    /* Light color */
+    text-align: right;
+    /* Align to the right for right bubbles */
+    margin-top: 5px;
+}
