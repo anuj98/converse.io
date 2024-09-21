@@ -41,7 +41,6 @@ export default function ChatSection() {
         });
     }
 
-
     return (
         <>
             {/* Navigation */}
@@ -55,10 +54,12 @@ export default function ChatSection() {
             </div>
             {/* Chat Section */}
             <div className={styles.chatSection}>
-                {getChats()}
-                <div>
-                    <input type="text" value={"Type message"} className={styles.chatInput} />
-                    <button className={styles.sendButton}>Send</button>
+                <div className={styles.allTexts}>{getChats()}</div>
+                <div className={styles.chatInputContainer}>
+                    <input type="text" placeholder="Type a message..." className={styles.chatInput} />
+                    <button className={styles.sendButton}>
+                        <span role="img" aria-label="send">🚀</span>
+                    </button>
                 </div>
             </div>
         </>

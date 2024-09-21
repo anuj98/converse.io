@@ -51,7 +51,7 @@ export const Home = () => {
                 />
               </div>
             </div>
-            <input type="text" className={styles.searchBar} />
+            <input type="text" className={styles.searchBar} placeholder="Search friend"/>
             <div className={styles.friendsList}>
                 <FriendConversation />
             </div>
