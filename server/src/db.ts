@@ -5,9 +5,7 @@ const connectDB = async () => {
         await mongoose.connect(
             "mongodb://localhost:27017/conversedb",
             {
-                useNewUrlParser: true,
-                useCreateIndex: true,
-                useFindAndModify: false
+                useNewUrlParser: true
             } as ConnectOptions
         )
         console.log("🚀Connected to database successfuly!!")

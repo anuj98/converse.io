@@ -1,7 +1,8 @@
-import ObjectId, { Schema } from "mongoose";
+import mongoose from "mongoose";
 import { validateEmail, validatePassword } from "../helper";
+import { IUser, IMessage } from "./models";
 
-const UserSchema = new Schema({
+const UserSchema = new mongoose.Schema<IUser>({
     displayName: {
         type: String,
         required: true
@@ -34,13 +35,13 @@ const UserSchema = new Schema({
     }
 });
 
-const MessageSchema = new Schema({
+const MessageSchema = new mongoose.Schema<IMessage>({
     fromId: {
-        type: ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         required: true
     },
     toId: {
-        type: ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         required: true
     },
     message: {
@@ -57,4 +58,7 @@ const MessageSchema = new Schema({
     }
 });
 
-export { UserSchema, MessageSchema };
+const User = mongoose.model("User", UserSchema);
+const Message = mongoose.model("Message", MessageSchema);
+
+export { User, Message };
