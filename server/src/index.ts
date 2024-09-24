@@ -1,9 +1,23 @@
 import express from "express";
+import { createServer } from "http";
+import { Server } from "socket.io";
+import connectDB from "./db";
+import socketConnect from "./home";
 
-const app = express()
+// Connect to Mongo DB
+connectDB();
 
-const PORT  = process.env.PORT || 5000
+// Express app creation
+const app = express();
+const server  = createServer(app);
+const io = new Server(server);
 
-app.listen(PORT, () => {
-    console.log(`🚀Server is listening to port ${PORT}`)
-})
+// PORT to listen
+const port = process.env.PORT || 5000;
+
+// Listen to socket connection in express app
+socketConnect(app, io)
+
+server.listen(port, () => {
+    console.log(`🚀Server running on port ${port}`)
+});
