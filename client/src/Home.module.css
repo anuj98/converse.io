@@ -34,6 +34,7 @@
 }
 
 .leftSection {
+  position: relative;
   width: 25%;
   background-color: var(--color-primary);
 }
@@ -64,18 +65,6 @@
   margin-left: 20px;
   margin-right: 20px;
 }
-
-.searchBar {
-  width: -webkit-fill-available;
-  border: 1px solid grey;
-  border-radius: 5px;
-  height: 30px;
-  margin-top: 8px;
-  outline: 0;
-  background-color: var(--color-ternary);
-}
-
-/* .friendsList {} */
 
 .rightSection {
   width: 75%;

@@ -2,23 +2,7 @@ import React from "react";
 import styles from "./Home.module.css";
 import FriendConversation from "./FriendConversation";
 import ChatSection from "./ChatSection";
-
-// Navigation with app name and logo
-// Root wrapper this should be like the center aligned
-// similar to the login/register but bigger
-// Left section and right section
-// Left section:
-// 1. top with profile image and name
-// 2. Search bar for searching users
-// 3. List of friends
-// a. Profile image
-// b. Display name
-// c. Last message in conversation
-// Right section
-// 1. top section with Profile image and display name and online icon
-// 2. Bottom is the chat section
-//   a.. conversation from both end as left right
-//   b.. type input and send
+import Search from "./search";
 
 export const Home = () => {
   return (
@@ -29,7 +13,7 @@ export const Home = () => {
           alt="Convo Icon"
           className={styles.chatAppIcon}
         />
-        <div className={styles.chatAppName}>Convo</div>
+        <div className={styles.chatAppName}>Converse.io</div>
       </nav>
       <div className={styles.appSectionRoot}>
         <div className={styles.appSection}>
@@ -51,7 +35,7 @@ export const Home = () => {
                 />
               </div>
             </div>
-            <input type="text" className={styles.searchBar} placeholder="Search friend"/>
+            <Search />
             <div className={styles.friendsList}>
                 <FriendConversation />
             </div>
