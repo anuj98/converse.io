@@ -15,7 +15,7 @@ const io = new Server(server);
 // PORT to listen
 const port = process.env.PORT || 5000;
 
-// Listen to socket connection in express app
+// APIs and socket connection setup
 Home(app, io)
 
 server.listen(port, () => {
