@@ -37,10 +37,12 @@ export const insertMessage = async (req: Request, res: Response) => {
 
     if (message) {
       await message.save();
+
+      // TODO: Real time functionality with Socket
     } else {
       res.status(400).json({ message: "Invalid message data" });
     }
-    res.status(200).json({
+    res.status(201).json({
       id: message._id,
       senderId: message.senderId,
       recieverId: message.recieverId,
@@ -94,7 +96,7 @@ export const updateMessage = async (req: Request, res: Response) => {
       res.status(404).json({ message: "Message not found" });
     }
   } catch (error) {
-    console.log("Error in insertMessage", error);
+    console.log("Error in updateMessage", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
@@ -119,7 +121,7 @@ export const deleteMessage = async (req: Request, res: Response) => {
       res.status(404).json({ message: "Message not found" });
     }
   } catch (error) {
-    console.log("Error in insertMessage", error);
+    console.log("Error in deleteMessage", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
