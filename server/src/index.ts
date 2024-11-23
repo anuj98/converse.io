@@ -1,23 +1,32 @@
 import express from "express";
-import { createServer } from "http";
-import { Server } from "socket.io";
-import connectDB from "./db";
-import Home from "./home";
+import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
+import {Document} from "mongoose";
+import authRoutes from "./routes/auth.route";
+import messageRoutes from "./routes/message.route";
+import userRoutes from "./routes/user.route";
+import { connectDB } from "./lib/db";
 
-// Connect to Mongo DB
-connectDB();
+dotenv.config();
 
-// Express app creation
+declare global {
+  namespace Express {
+    interface Request {
+      user: Document;
+    }
+  }
+}
+
 const app = express();
-const server  = createServer(app);
-const io = new Server(server);
+const PORT = process.env.PORT;
 
-// PORT to listen
-const port = process.env.PORT || 5000;
+app.use(express.json());
+app.use(cookieParser());
+app.use("/api/auth", authRoutes);
+app.use("/api/messages", messageRoutes);
+app.use("/api/users", userRoutes);
 
-// Listen to socket connection in express app
-Home(app, io)
-
-server.listen(port, () => {
-    console.log(`🚀Server running on port ${port}`)
+app.listen(PORT, () => {
+  console.log(`Connected to server successfully on port ${PORT}!!!`);
+  connectDB();
 });
