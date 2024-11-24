@@ -4,6 +4,6 @@ import { getUsers } from "../controllers/user.controller";
 
 const router = express.Router();
 
-router.get("", protectRoute, getUsers)
+router.post("", protectRoute, getUsers)
 
 export default router;

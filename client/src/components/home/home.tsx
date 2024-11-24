@@ -1,10 +1,16 @@
 import React from "react";
-import styles from "./Home.module.css";
-import FriendConversation from "./FriendConversation";
-import ChatSection from "./ChatSection";
-import Search from "./search";
+import styles from "./home.module.css";
+import FriendConversation from "../friendConversation/friendConversation";
+import Search from "../search/search";
+import ChatSection from "../chatSection/chatSection";
+import { useAuthStore } from "../../store/useAuthStore";
 
 export const Home = () => {
+  const { authUser, logout } = useAuthStore();
+
+  const handleLogout = async() => {
+    await logout();
+  }
   return (
     <>
       <nav className={styles.navigation}>
@@ -25,19 +31,21 @@ export const Home = () => {
                   alt="Profile"
                   className={styles.profileImage}
                 />
-                <span className={styles.displayName}>Anuj Upadhyaya</span>
-                <img
-                  src="logout.png"
-                  alt="Logout icon"
-                  className={styles.logoutImage}
-                  width={25}
-                  height={25}
-                />
+                <span className={styles.displayName}>{authUser?.fullName}</span>
+                <div onClick={async() => await handleLogout()}>
+                  <img
+                    src="logout.png"
+                    alt="Logout icon"
+                    className={styles.logoutImage}
+                    width={25}
+                    height={25}
+                  />
+                </div>
               </div>
             </div>
             <Search />
             <div className={styles.friendsList}>
-                <FriendConversation />
+              <FriendConversation />
             </div>
           </div>
           <div className={styles.rightSection}>

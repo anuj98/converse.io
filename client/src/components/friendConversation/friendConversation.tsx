@@ -1,4 +1,4 @@
-import styles from "./FriendConversation.module.css";
+import styles from "./friendConversation.module.css";
 
 export default function FriendConversation() {
   const friendsList = [

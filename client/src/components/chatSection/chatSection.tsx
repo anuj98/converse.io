@@ -1,4 +1,4 @@
-import styles from "./ChatSection.module.css";
+import styles from "./chatSection.module.css";
 
 export default function ChatSection() {
     // texts to be sorted based on created date ascending order by date and time

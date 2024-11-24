@@ -1,14 +1,18 @@
 import React, { FormEvent, useState } from "react";
-import styles from "./Login.module.css";
+import styles from "../login/login.module.css";
+import { useAuthStore } from "../../store/useAuthStore";
 
 export const Register = () => {
   const [imageName, setImageName] = useState<string>("");
+  const {signup} = useAuthStore()
+  
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     var email = e.currentTarget["email"].value;
     var value = e.currentTarget["password"].value;
-    var displayName = e.currentTarget["displayName"].value;
+    var displayName = e.currentTarget["fullName"].value;
     var profileImg = e.currentTarget.files?.[0];
+    signup(email, value, displayName, profileImg ?? "");
   };
 
   const getProfileImageText = () => {
@@ -47,12 +51,12 @@ export const Register = () => {
               />
             </div>
             <div className={styles.formContentsInputWrapper}>
-              <label>Display Name</label>
+              <label>Full Name</label>
               <input
                 className={styles.formContentsInput}
                 type="text"
-                name="displayName"
-                title="Display Name"
+                name="fullName"
+                title="Full Name"
                 placeholder="Type display name"
               />
             </div>

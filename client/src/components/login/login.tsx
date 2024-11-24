@@ -1,12 +1,23 @@
 import React, { FormEvent } from "react";
-import styles from "./Login.module.css";
+import styles from "./login.module.css";
+import { useAuthStore } from "../../store/useAuthStore";
+import { useNavigate } from "react-router-dom";
 
 export const Login = () => {
+  const { login } = useAuthStore();
+  const navigate = useNavigate();
+
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     var email = e.currentTarget["email"].value;
     var value = e.currentTarget["password"].value;
+    login(email, value);
   };
+
+  const handleRegisterClick = () => {
+    navigate("/register");
+  }
+
   return (
     <div className={styles.formRoot}>
       <div className={styles.formWrapper}>
@@ -42,6 +53,9 @@ export const Login = () => {
                 title="Login"
                 value="Login"
               />
+            </div>
+            <div className={styles.formContentsInputWrapper} onClick={handleRegisterClick}>
+              <a href="" >Register</a>
             </div>
           </div>
         </form>
