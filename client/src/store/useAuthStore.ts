@@ -16,7 +16,6 @@ export interface IAuthStore {
   isLogin: boolean;
   isAuthenticating: boolean;
   checkAuth: () => void;
-  allUsers?: IUser[] | null;
   login: (email: string, password: string) => void;
   logout: () => void;
   signup: (
@@ -25,7 +24,6 @@ export interface IAuthStore {
     fullName: string,
     profilePic: string
   ) => void;
-  getUsers: () => void;
 }
 
 export const useAuthStore = create<IAuthStore>((set) => ({
@@ -90,7 +88,7 @@ export const useAuthStore = create<IAuthStore>((set) => ({
         profilePic: profilePic,
       };
       const response = await axiosInstance.post("/auth/signup", payload);
-      if (response.status == 201) {
+      if (response.status === 201) {
         console.log("Sign up Status", response.data);
         set({ authUser: response.data, isAuthenticating: false });
       } else {
@@ -100,18 +98,6 @@ export const useAuthStore = create<IAuthStore>((set) => ({
     } catch (error) {
       console.log("Error in signup store function", error);
       set({ authUser: null, isAuthenticating: false });
-    }
-  },
-
-  getUsers: async () => {
-    try {
-      const response = await axiosInstance.post("/users");
-      if (response.status == 200) {
-        set({ allUsers: response.data });
-      }
-    } catch (error) {
-      console.log("Error in getUsers store function", error);
-      set({ allUsers: null });
     }
   },
 }));

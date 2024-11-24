@@ -5,13 +5,18 @@ import { Login } from "./components/login/login";
 import { Register } from "./components/register/Register";
 import "./App.css";
 import { useAuthStore } from "./store/useAuthStore";
+import { useMessageStore } from "./store/useMessageStore";
+import { useUserStore } from "./store/useUserStore";
 
 function App() {
-  const { authUser, checkAuth, getUsers, isAuthenticating } = useAuthStore();
+  const { authUser, checkAuth, isAuthenticating } = useAuthStore();
+  const { getUsers } = useUserStore();
+  const { getTopMessages } = useMessageStore();
 
   useEffect(() => {
     checkAuth();
     getUsers();
+    getTopMessages();
   }, [checkAuth]);
 
   if (isAuthenticating && !authUser) {

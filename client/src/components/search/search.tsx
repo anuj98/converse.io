@@ -1,21 +1,25 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import styles from "./search.module.css";
-import { useAuthStore } from "../../store/useAuthStore";
+import { useUserStore } from "../../store/useUserStore";
+import { useMessageStore } from "../../store/useMessageStore";
 
 export default function Search() {
   const [searchValue, setSearchValue] = useState<string>();
-  const { allUsers } = useAuthStore();
+  const { allUsers } = useUserStore();
+  const { getMessagesForSingleFriend } = useMessageStore();
 
   const findUsersByDisplayName = () => {
     if (searchValue) {
-      console.log(allUsers);
       const users = allUsers?.filter((user) =>
         user.fullName.toLowerCase().includes(searchValue.toLowerCase())
       );
-      console.log("filtered", users);
       return users?.map((user) => {
         return (
-          <div key={`search_${user.id}`} className={styles.userName}>
+          <div
+            key={`search_${user.id}`}
+            className={styles.userName}
+            onClick={() => getMessagesForSingleFriend(user.id)}
+          >
             <span>
               <img
                 alt={user.fullName}

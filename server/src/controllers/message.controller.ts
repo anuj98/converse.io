@@ -1,13 +1,52 @@
 import { Request, Response } from "express";
 import Message from "../models/message.model";
-import { Types } from "mongoose";
 
-export const getMessages = async (req: Request, res: Response) => {
+export const getTopMessages = async (req: Request, res: Response) => {
   const userDetails = req.user;
   try {
-    const messages = await Message.find({
-      $or: [{ senderId: userDetails._id }, { receiverId: userDetails._id }],
-    }).select("-__v");
+    let messages = await Message.aggregate([
+      {
+        $match: {
+          $or: [{ senderId: userDetails._id }, { receiverId: userDetails._id }],
+        },
+      },
+      {
+        $addFields: {
+          friendId: {
+            $cond: {
+              if: { $eq: ["$senderId", userDetails._id] },
+              then: "$recieverId",
+              else: "$senderId",
+            },
+          },
+        },
+      },
+      {
+        $sort: { createdAt: -1 }, // Sort messages by `createdAt` in descending order
+      },
+      {
+        $group: {
+          _id: "$friendId", // Group by the friendId (unique friend)
+          lastMessage: { $first: "$$ROOT" }, // Get the most recent message for each group
+        },
+      },
+      {
+        $replaceRoot: { newRoot: "$lastMessage" }, // Replace the root document with the last message
+      },
+      {
+        $sort: { createdAt: -1 }, // Sort messages by `createdAt` in descending order
+      },
+      {
+        $project: {
+          "id": "$_id",
+          "senderId": "$senderId",
+          "recieverId": "$recieverId",
+          "text": "$text",
+          "createdAt": "$createdAt",
+          "updatedAt": "$updatedAt"
+        }
+      }
+    ]);
     res.status(200).json(messages);
   } catch (error) {
     console.log("Error in getMessages", error);
@@ -15,8 +54,32 @@ export const getMessages = async (req: Request, res: Response) => {
   }
 };
 
+export const getMessagesForSingleFriend = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const userDetails = req.user;
+    const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ message: "Friends userId is required" });
+    }
+    const messages = await Message.find({
+      $or: [
+        { senderId: userDetails._id, recieverId: id },
+        { senderId: id, recieverId: userDetails._id },
+      ],
+    });
+    res.status(200).json(messages);
+  } catch (error) {
+    console.log("Error in getMessagesForSingleFriend", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
 export const insertMessage = async (req: Request, res: Response) => {
-  const { text, recieverId, picture } = req.body;
+  const { recieverId, text, picture } = req.body;
+  console.log("Input as text, reciever, picture", text, recieverId, picture);
   const userDetails = req.user;
   try {
     if (!recieverId) {
@@ -29,9 +92,9 @@ export const insertMessage = async (req: Request, res: Response) => {
 
     // Create message object
     const message = new Message({
-      text,
+      text: text,
       senderId: userDetails._id,
-      recieverId,
+      recieverId: recieverId,
       picture,
     });
 
@@ -59,7 +122,6 @@ export const insertMessage = async (req: Request, res: Response) => {
 export const updateMessage = async (req: Request, res: Response) => {
   const { text, picture } = req.body;
   const id = req.params.id;
-  console.log("MessageId:", id);
   const userDetails = req.user;
   try {
     if (!id) {
@@ -71,14 +133,17 @@ export const updateMessage = async (req: Request, res: Response) => {
     }
 
     // Find message
-    const message = await Message.findOne({ _id: id, senderId: userDetails._id });
+    const message = await Message.findOne({
+      _id: id,
+      senderId: userDetails._id,
+    });
 
     if (message) {
       const response = await Message.findByIdAndUpdate(
         id,
         { text, picture },
         { returnDocument: "after" }
-      ).select("-__v");
+      );
 
       if (response) {
         res.status(200).json({
@@ -103,7 +168,6 @@ export const updateMessage = async (req: Request, res: Response) => {
 
 export const deleteMessage = async (req: Request, res: Response) => {
   const id = req.params.id;
-  console.log("MessageId:", id);
   const userDetails = req.user;
   try {
     if (!id) {
@@ -111,7 +175,10 @@ export const deleteMessage = async (req: Request, res: Response) => {
     }
 
     // Find message
-    const message = await Message.findOne({ _id: id, senderId: userDetails._id });
+    const message = await Message.findOne({
+      _id: id,
+      senderId: userDetails._id,
+    });
 
     if (message) {
       // Delete message
