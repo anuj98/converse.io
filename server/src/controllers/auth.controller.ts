@@ -41,7 +41,7 @@ export const signup = async (req: Request, res: Response) => {
       // Generate JWT token if successfully created a user
       generateJWTToken(user._id, res);
 
-      res.status(201).json(user).header("Access-Control-Allow-Origin", "*");
+      res.status(201).json(user);
     } else {
       res.status(400).json({ message: "Invalid user data" });
     }
