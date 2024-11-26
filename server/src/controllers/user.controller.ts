@@ -6,12 +6,9 @@ export const getUsers = async (req: Request, res: Response) => {
   try {
     let allUsersDB = [];
     if (filter) {
-      allUsersDB = await User.find({ fullName: { $regex: filter, $options: "i" } }).select([
-        "-password",
-        "-__v",
-      ]);
+      allUsersDB = await User.find({ fullName: { $regex: filter, $options: "i" } });
     } else {
-      allUsersDB = await User.find().select(["-password", "-__v"]);
+      allUsersDB = await User.find();
     }
     res.status(200).json(allUsersDB);
   } catch (error) {

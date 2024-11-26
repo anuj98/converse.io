@@ -4,7 +4,7 @@ import { useUserStore } from "../../store/useUserStore";
 import styles from "./friendConversation.module.css";
 
 export default function FriendConversation() {
-  const { messages, getMessagesForSingleFriend } = useMessageStore();
+  const { groups: messages, setSelectedGroup } = useMessageStore();
   const { authUser } = useAuthStore();
   const { allUsers } = useUserStore();
 
@@ -31,7 +31,7 @@ export default function FriendConversation() {
       .filter((friend) => friend !== undefined);
 
     const handleGroupSelect = (userId: string) => {
-      getMessagesForSingleFriend(userId);
+      setSelectedGroup(userId);
     };
 
     return friendsList.map((friend) => {

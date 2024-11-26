@@ -6,7 +6,7 @@ import { useMessageStore } from "../../store/useMessageStore";
 export default function Search() {
   const [searchValue, setSearchValue] = useState<string>();
   const { allUsers } = useUserStore();
-  const { getMessagesForSingleFriend } = useMessageStore();
+  const { getGroupMessages: getMessagesForSingleFriend } = useMessageStore();
 
   const findUsersByDisplayName = () => {
     if (searchValue) {

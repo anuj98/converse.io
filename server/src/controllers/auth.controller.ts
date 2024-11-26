@@ -35,17 +35,13 @@ export const signup = async (req: Request, res: Response) => {
     });
 
     if (user) {
-      // Generate JWT token if successfully created a user
-      generateJWTToken(user._id, res);
       // Save in DB
       await user.save();
 
-      res.status(201).json({
-        id: user._id,
-        fullName: user.fullName,
-        email: user.email,
-        profilePic: user.profilePic,
-      });
+      // Generate JWT token if successfully created a user
+      generateJWTToken(user._id, res);
+
+      res.status(201).json(user);
     } else {
       res.status(400).json({ message: "Invalid user data" });
     }
@@ -79,12 +75,7 @@ export const login = async (req: Request, res: Response) => {
 
     generateJWTToken(user._id, res);
 
-    res.status(200).json({
-      id: user._id,
-      fullName: user.fullName,
-      email: user.email,
-      profilePic: user.profilePic,
-    });
+    res.status(200).json(user);
   } catch (error) {
     console.log("Error in login controller", error);
     res.status(500).json({ message: "Internal Server Error" });

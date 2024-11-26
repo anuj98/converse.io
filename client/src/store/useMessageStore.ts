@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { axiosInstance } from "../lib/axios";
+import { useAuthStore } from "./useAuthStore";
 
 export interface IMessage {
   id: string;
@@ -12,33 +13,41 @@ export interface IMessage {
 }
 
 export interface IMessageStore {
-  messages: IMessage[];
+  groups: IMessage[];
   groupConversation: IMessage[];
   selectedGroup?: string | null;
+  setSelectedGroup: (selectedGroup: string) => void;
   getTopMessages: () => void;
-  getMessagesForSingleFriend: (userId: string) => void;
+  getGroupMessages: (userId: string) => void;
   sendMessage: (userId: string, text: string) => void;
+  subscribe: () => void;
+  unsubscribe: () => void;
 }
 
-export const useMessageStore = create<IMessageStore>((set) => ({
-  messages: [],
+export const useMessageStore = create<IMessageStore>((set, get) => ({
+  groups: [],
   groupConversation: [],
   selectedGroup: null,
+
+  setSelectedGroup: (selectedGroup: string) => {
+    set({ selectedGroup });
+  },
+
   getTopMessages: async () => {
     try {
       const response = await axiosInstance.get("/messages");
       if (response.status === 200) {
-        set({ messages: response.data });
+        set({ groups: response.data });
       } else {
-        set({ messages: [] });
+        set({ groups: [] });
       }
     } catch (error) {
       console.log("Error in getTopMessages store function", error);
-      set({ messages: [] });
+      set({ groups: [] });
     }
   },
 
-  getMessagesForSingleFriend: async (userId: string) => {
+  getGroupMessages: async (userId: string) => {
     try {
       set({ selectedGroup: userId });
       const response = await axiosInstance.get(`/messages/user/${userId}`);
@@ -67,5 +76,33 @@ export const useMessageStore = create<IMessageStore>((set) => ({
     } catch (error) {
       console.log("Error in getTopMessages store function", error);
     }
+  },
+
+  subscribe: () => {
+    const { selectedGroup } = get();
+    if (!selectedGroup) return;
+
+    const socket = useAuthStore.getState().socket;
+
+    socket?.on("newMessage", (message) => {
+      const requiredUserTopMessage = get().groups.filter(
+        (oldMessage) =>
+          oldMessage.senderId !== selectedGroup &&
+          oldMessage.recieverId !== selectedGroup
+      );
+      let updatedMessages = [...requiredUserTopMessage, message];
+      if (requiredUserTopMessage) {
+        set({ groups: updatedMessages });
+      }
+      set({
+        groupConversation: [...get().groupConversation, message],
+      });
+    });
+  },
+
+  unsubscribe: () => {
+    const socket = useAuthStore.getState().socket;
+
+    socket?.off("newMessage");
   },
 }));

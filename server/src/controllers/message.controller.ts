@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import Message from "../models/message.model";
+import { getRecieverSocketId, io } from "../lib/socket";
 
 export const getTopMessages = async (req: Request, res: Response) => {
   const userDetails = req.user;
@@ -38,14 +39,14 @@ export const getTopMessages = async (req: Request, res: Response) => {
       },
       {
         $project: {
-          "id": "$_id",
-          "senderId": "$senderId",
-          "recieverId": "$recieverId",
-          "text": "$text",
-          "createdAt": "$createdAt",
-          "updatedAt": "$updatedAt"
-        }
-      }
+          id: "$_id",
+          senderId: "$senderId",
+          recieverId: "$recieverId",
+          text: "$text",
+          createdAt: "$createdAt",
+          updatedAt: "$updatedAt",
+        },
+      },
     ]);
     res.status(200).json(messages);
   } catch (error) {
@@ -101,18 +102,23 @@ export const insertMessage = async (req: Request, res: Response) => {
     if (message) {
       await message.save();
 
-      // TODO: Real time functionality with Socket
+      // Real time functionality with Socket
+      const recieverSocketId = getRecieverSocketId(recieverId);
+      if (recieverSocketId) {
+        io.to(recieverSocketId).emit("newMessage", {
+          id: message._id,
+          senderId: message.senderId,
+          recieverId: message.recieverId,
+          text: message.text,
+          createdAt: message.createdAt,
+          updatedAt: message.updatedAt,
+        });
+      }
+
+      res.status(201).json(message);
     } else {
       res.status(400).json({ message: "Invalid message data" });
     }
-    res.status(201).json({
-      id: message._id,
-      senderId: message.senderId,
-      recieverId: message.recieverId,
-      text: message.text,
-      createdAt: message.createdAt,
-      updatedAt: message.updatedAt,
-    });
   } catch (error) {
     console.log("Error in insertMessage", error);
     res.status(500).json({ message: "Internal Server Error" });
@@ -146,14 +152,7 @@ export const updateMessage = async (req: Request, res: Response) => {
       );
 
       if (response) {
-        res.status(200).json({
-          id: response._id,
-          senderId: response.senderId,
-          recieverId: response.recieverId,
-          text: response.text,
-          createdAt: response.createdAt,
-          updatedAt: response.updatedAt,
-        });
+        res.status(200).json(response);
       } else {
         res.status(500).json({ message: "Failed to save message" });
       }

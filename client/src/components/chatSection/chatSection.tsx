@@ -1,14 +1,44 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAuthStore } from "../../store/useAuthStore";
 import { useMessageStore } from "../../store/useMessageStore";
 import { useUserStore } from "../../store/useUserStore";
 import styles from "./chatSection.module.css";
 
 export default function ChatSection() {
-  const { selectedGroup, groupConversation, getMessagesForSingleFriend, sendMessage } = useMessageStore();
+  const {
+    selectedGroup,
+    groupConversation,
+    getGroupMessages: getMessagesForSingleFriend,
+    sendMessage,
+    subscribe,
+    unsubscribe,
+  } = useMessageStore();
   const { allUsers } = useUserStore();
   const { authUser } = useAuthStore();
   const [message, setMessage] = useState<string | undefined>(undefined);
+  const messageRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (selectedGroup) getMessagesForSingleFriend(selectedGroup);
+
+    subscribe();
+    return () => unsubscribe();
+  }, [
+    selectedGroup,
+    groupConversation,
+    getMessagesForSingleFriend,
+    sendMessage,
+    subscribe,
+    unsubscribe,
+  ]);
+
+  useEffect(() => {
+    if (messageRef.current && groupConversation) {
+      messageRef.current.scrollIntoView({
+        behavior: "smooth",
+      });
+    }
+  }, [groupConversation]);
 
   const friend = allUsers?.find((user) => user.id === selectedGroup);
 
@@ -22,6 +52,7 @@ export default function ChatSection() {
               ? styles.chatBubbleRight
               : styles.chatBubbleLeft
           }`}
+          ref={messageRef}
         >
           {message.text}
           <div className={styles.sentTime}>
@@ -42,10 +73,10 @@ export default function ChatSection() {
 
   const handleSendMessage = () => {
     if (message && message.length && friend) {
-      sendMessage(friend.id, message)
-      getMessagesForSingleFriend(friend.id)
+      sendMessage(friend.id, message);
+      setMessage("");
     }
-  }
+  };
 
   return (
     <>

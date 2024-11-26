@@ -1,16 +1,26 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "./home.module.css";
 import FriendConversation from "../friendConversation/friendConversation";
 import Search from "../search/search";
 import ChatSection from "../chatSection/chatSection";
 import { useAuthStore } from "../../store/useAuthStore";
+import { useUserStore } from "../../store/useUserStore";
+import { useMessageStore } from "../../store/useMessageStore";
 
 export const Home = () => {
   const { authUser, logout } = useAuthStore();
+  const { getUsers } = useUserStore();
+  const { getTopMessages } = useMessageStore();
 
-  const handleLogout = async() => {
-    await logout();
-  }
+  useEffect(() => {
+    getUsers();
+    getTopMessages();
+  }, [getUsers, getTopMessages]);
+
+  const handleLogout = () => {
+    logout();
+  };
+
   return (
     <>
       <nav className={styles.navigation}>
@@ -32,7 +42,7 @@ export const Home = () => {
                   className={styles.profileImage}
                 />
                 <span className={styles.displayName}>{authUser?.fullName}</span>
-                <div onClick={async() => await handleLogout()}>
+                <div onClick={async () => await handleLogout()}>
                   <img
                     src="logout.png"
                     alt="Logout icon"

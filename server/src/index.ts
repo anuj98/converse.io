@@ -7,6 +7,7 @@ import messageRoutes from "./routes/message.route";
 import userRoutes from "./routes/user.route";
 import { connectDB } from "./lib/db";
 import cors from "cors";
+import { app, server } from "./lib/socket"; 
 
 dotenv.config();
 
@@ -18,7 +19,6 @@ declare global {
   }
 }
 
-const app = express();
 const PORT = process.env.PORT;
 
 app.use(express.json());
@@ -28,7 +28,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/users", userRoutes);
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Connected to server successfully on port ${PORT}!!!`);
   connectDB();
 });
