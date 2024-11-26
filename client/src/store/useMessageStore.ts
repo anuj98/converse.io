@@ -85,6 +85,8 @@ export const useMessageStore = create<IMessageStore>((set, get) => ({
     const socket = useAuthStore.getState().socket;
 
     socket?.on("newMessage", (message) => {
+      if (message.senderId !== selectedGroup) return;
+      
       const requiredUserTopMessage = get().groups.filter(
         (oldMessage) =>
           oldMessage.senderId !== selectedGroup &&
