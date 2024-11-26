@@ -21,7 +21,7 @@ declare global {
 }
 
 const PORT = process.env.PORT;
-const __dirname = path.resolve();
+const __dirName = path.resolve();
 
 app.use(express.json());
 app.use(cookieParser());
@@ -31,10 +31,10 @@ app.use("/api/messages", messageRoutes);
 app.use("/api/users", userRoutes);
 
 if (process.env.NODE_ENV !== "development") {
-  app.use(express.static(path.join(__dirname, "../client/build")));
+  app.use(express.static(path.join(__dirName, "../client/build")));
 
   app.get("*", (req, res) => [
-    res.sendFile(path.join(__dirname, "../client", "build", "index.html")),
+    res.sendFile(path.join(__dirName, "../client", "build", "index.html")),
   ]);
 }
 
